@@ -10,8 +10,9 @@ import {
   Sparkles,
   ArrowRight,
   ShieldCheck,
+  MessageCircle,
 } from 'lucide-react';
-import { GithubIcon, LinkedinIcon } from '@/components/ui/Icons';
+import { GithubIcon, LinkedinIcon, WhatsappIcon } from '@/components/ui/Icons';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Card3D } from '@/components/ui/Card3D';
 import { Button } from '@/components/ui/Button';
@@ -19,6 +20,7 @@ import { Badge } from '@/components/ui/Badge';
 import { TextReveal } from '@/components/ui/TextReveal';
 import { GlitchText } from '@/components/ui/GlitchText';
 import { PERSONAL_INFO } from '@/data/portfolioData';
+import { sound } from '@/lib/sound';
 
 export function Contact() {
   const [formData, setFormData] = useState({
@@ -30,19 +32,16 @@ export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSent, setIsSent] = useState(false);
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    sound.playClick(1000);
 
     setTimeout(() => {
       setIsSubmitting(false);
       setIsSent(true);
+      sound.playSuccess();
       setFormData({ name: '', email: '', subject: '', message: '' });
       setTimeout(() => setIsSent(false), 5000);
     }, 1000);
@@ -50,6 +49,7 @@ export function Contact() {
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(PERSONAL_INFO.email);
+    sound.playSuccess();
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 3000);
   };
@@ -72,7 +72,7 @@ export function Contact() {
               <CheckCircle2 className="w-4 h-4" />
             </div>
             <div>
-              <span className="font-bold text-emerald-400 block">EMAIL COPIED!</span>
+              <span className="font-bold text-emerald-400 block">EMAIL DISALIN!</span>
               <span className="text-[11px] text-zinc-400">{PERSONAL_INFO.email}</span>
             </div>
           </motion.div>
@@ -87,7 +87,7 @@ export function Contact() {
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-12">
-          {/* Left Column: Direct Info Card */}
+          {/* Left Column: Direct Info & Quick WhatsApp */}
           <div className="lg:col-span-5 space-y-6">
             <Card3D glowColor="yellow" className="p-6 sm:p-8 space-y-6">
               <div className="space-y-3">
@@ -100,18 +100,41 @@ export function Contact() {
                   </TextReveal>
                 </h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-300 font-sans leading-relaxed">
-                  Saya selalu terbuka untuk berdiskusi seputar peluang Full-Stack Engineering, arsitektur RESTful API, integrasi basis data, maupun kerja sama tim produk.
+                  Saya selalu terbuka untuk peluang Full-Stack Web Development, perancangan REST API terstruktur, maupun integrasi sistem produk.
                 </p>
               </div>
 
-              {/* Direct Email Dispatch Box with noth.in data-cursor */}
+              {/* QUICK WHATSAPP CHAT BUTTON (FEATURE NO. 3) */}
+              <a
+                href={PERSONAL_INFO.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex items-center justify-between p-4 rounded-xl bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/40 hover:border-emerald-400 text-emerald-950 dark:text-white transition-all shadow-md active:scale-98"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-emerald-500 text-white flex items-center justify-center shadow-lg shadow-emerald-500/30 group-hover:scale-110 transition-transform">
+                    <WhatsappIcon className="w-5 h-5 fill-current" />
+                  </div>
+                  <div>
+                    <span className="font-bold text-sm text-zinc-900 dark:text-white block">
+                      Chat via WhatsApp
+                    </span>
+                    <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-mono flex items-center gap-1.5">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                      Respon Cepat / Diskusi Langsung
+                    </span>
+                  </div>
+                </div>
+                <ArrowRight className="w-4 h-4 text-emerald-500 group-hover:translate-x-1 transition-transform" />
+              </a>
+
+              {/* Direct Email Dispatch Box */}
               <div
-                data-cursor="copy"
                 onClick={handleCopyEmail}
                 className="p-4 rounded-xl bg-zinc-100 dark:bg-zinc-900/90 border border-zinc-200 dark:border-white/10 font-mono cursor-pointer hover:border-yellow-500/50 transition-colors"
               >
                 <span className="text-[10px] text-zinc-500 uppercase tracking-widest block mb-1 font-bold">
-                  // DIRECT EMAIL DISPATCH (CLICK TO COPY)
+                  // DIRECT EMAIL DISPATCH (KLIK UNTUK SALIN)
                 </span>
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 font-bold truncate">
@@ -265,6 +288,7 @@ export function Contact() {
 
                 <Button
                   type="submit"
+                  suppressHydrationWarning
                   disabled={isSubmitting}
                   variant="primary"
                   size="lg"

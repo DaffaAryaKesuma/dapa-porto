@@ -5,7 +5,9 @@ import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Terminal, Cpu, ArrowUpRight } from 'lucide-react';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { SoundToggle } from '@/components/ui/SoundToggle';
 import { NAV_LINKS, PERSONAL_INFO } from '@/data/portfolioData';
+import { sound } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 
 export function Navbar() {
@@ -33,50 +35,51 @@ export function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 flex justify-center px-4 sm:px-6 py-4 pointer-events-none">
+    <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pt-4 pointer-events-none">
       <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className={cn(
-          'w-full max-w-5xl rounded-full transition-all duration-300 pointer-events-auto flex items-center justify-between px-4 sm:px-6 py-2.5 sm:py-3',
+          'w-full max-w-5xl flex items-center justify-between px-4 sm:px-6 py-2.5 rounded-full transition-all duration-300 pointer-events-auto border shadow-lg',
           isScrolled
-            ? 'bg-white/80 dark:bg-[#08080c]/80 backdrop-blur-2xl border border-zinc-200/90 dark:border-white/10 shadow-[0_8px_32px_rgba(0,0,0,0.25)]'
-            : 'bg-white/50 dark:bg-zinc-950/40 backdrop-blur-xl border border-zinc-200/60 dark:border-white/5'
+            ? 'bg-white/85 dark:bg-[#08080c]/85 border-zinc-300 dark:border-white/10 backdrop-blur-xl shadow-zinc-950/10 dark:shadow-black/40'
+            : 'bg-white/60 dark:bg-zinc-950/60 border-zinc-200/80 dark:border-white/5 backdrop-blur-md'
         )}
       >
-        {/* Brand Logo with 3D Status Light */}
+        {/* Brand / Logo */}
         <Link
           href="#home"
-          className="flex items-center gap-2 group cursor-pointer focus:outline-none"
+          onClick={() => sound.playClick()}
+          className="flex items-center gap-2.5 font-mono text-xs font-bold text-zinc-900 dark:text-white group select-none"
         >
-          <div className="relative w-8 h-8 rounded-lg bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 flex items-center justify-center font-mono font-bold text-xs shadow-md group-hover:scale-105 transition-transform">
-            <span>DK</span>
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-white dark:border-zinc-950 animate-pulse" />
+          <div className="w-8 h-8 rounded-full bg-yellow-400 dark:bg-yellow-500 text-zinc-950 flex items-center justify-center font-black text-sm shadow-md shadow-yellow-500/20 group-hover:rotate-12 transition-transform">
+            DK
           </div>
-          <div className="hidden sm:flex flex-col text-left">
-            <span className="font-mono text-xs font-bold tracking-wider text-zinc-900 dark:text-white leading-tight">
+          <div className="flex flex-col">
+            <span className="tracking-wider group-hover:text-yellow-600 dark:group-hover:text-yellow-400 transition-colors">
               DAFFA ARYA
             </span>
-            <span className="font-mono text-[9px] text-yellow-600 dark:text-yellow-400 tracking-widest leading-tight">
+            <span className="text-[9px] text-zinc-500 dark:text-zinc-400 tracking-widest font-medium -mt-0.5">
               FULL-STACK // DEV
             </span>
           </div>
         </Link>
 
-        {/* Desktop Floating Navigation Pills with layoutId Indicator */}
-        <nav className="hidden md:flex items-center gap-1 bg-zinc-100/70 dark:bg-zinc-900/60 p-1 rounded-full border border-zinc-200/60 dark:border-white/5 font-mono text-xs">
+        {/* Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-1 font-mono text-xs">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.href.replace('#', '');
             return (
               <Link
                 key={link.name}
                 href={link.href}
+                onClick={() => sound.playClick()}
                 className={cn(
                   'relative px-3.5 py-1.5 rounded-full transition-colors duration-200 font-medium select-none',
                   isActive
@@ -97,12 +100,17 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right Actions: Theme Toggle & Quick CTA */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right Actions: Sound Toggle, Theme Toggle & Quick CTA */}
+        <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Sound Synthesizer Toggle */}
+          <SoundToggle />
+
+          {/* Theme Switcher Toggle */}
           <ThemeToggle />
 
           <Link
             href="#contact"
+            onClick={() => sound.playClick()}
             className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-zinc-900 dark:bg-white hover:bg-yellow-500 dark:hover:bg-yellow-400 text-white dark:text-zinc-950 font-mono text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
           >
             <span>HUBUNGI</span>
@@ -113,8 +121,11 @@ export function Navbar() {
           <button
             type="button"
             suppressHydrationWarning
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-yellow-500 transition-colors"
+            onClick={() => {
+              sound.playClick();
+              setMobileMenuOpen(!mobileMenuOpen);
+            }}
+            className="md:hidden p-2 rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-yellow-500 transition-colors cursor-pointer"
             aria-label="Toggle Navigation Menu"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -130,7 +141,7 @@ export function Navbar() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="fixed top-20 left-4 right-4 z-50 rounded-2xl bg-white/95 dark:bg-[#0a0a0f]/95 backdrop-blur-2xl border border-zinc-200 dark:border-white/10 p-5 shadow-2xl pointer-events-auto md:hidden"
+            className="absolute top-18 left-4 right-4 bg-white/95 dark:bg-zinc-950/95 border border-zinc-200 dark:border-zinc-800 backdrop-blur-2xl rounded-2xl p-5 shadow-2xl pointer-events-auto md:hidden"
           >
             <div className="flex flex-col gap-2 font-mono text-sm">
               {NAV_LINKS.map((link) => {
@@ -139,7 +150,10 @@ export function Navbar() {
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      sound.playClick();
+                      setMobileMenuOpen(false);
+                    }}
                     className={cn(
                       'flex items-center justify-between p-3 rounded-xl transition-all',
                       isActive

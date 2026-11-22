@@ -8,6 +8,7 @@ import { TextReveal } from '@/components/ui/TextReveal';
 import { GlitchText } from '@/components/ui/GlitchText';
 import { EngineMesh3D } from '@/components/3d/EngineMesh3D';
 import { ArchitectureSimulator } from '@/components/ui/ArchitectureSimulator';
+import { XRayTag } from '@/components/ui/XRayInspector';
 import { PERSONAL_INFO } from '@/data/portfolioData';
 
 export function Hero() {
@@ -133,8 +134,9 @@ export function Hero() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.15 }}
           transition={{ duration: 0.6 }}
-          className="w-full shadow-2xl"
+          className="w-full shadow-2xl relative"
         >
+          <XRayTag label="REST API SIMULATOR" tech="Decoupled Mock Server Engine" />
           <ArchitectureSimulator />
         </motion.div>
       </div>

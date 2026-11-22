@@ -13,6 +13,7 @@ import { Preloader } from '@/components/ui/Preloader';
 import { SmoothScroll } from '@/components/ui/SmoothScroll';
 import { Floating3DArtifacts } from '@/components/ui/Floating3DArtifacts';
 import { Marquee } from '@/components/ui/Marquee';
+import { XRayInspector } from '@/components/ui/XRayInspector';
 
 export default function Home() {
   const [loadingComplete, setLoadingComplete] = useState(false);
@@ -25,8 +26,11 @@ export default function Home() {
       {/* Top Viewport Radiant Scroll Progress Bar */}
       <ScrollProgress />
 
-      {/* Floating 3D Parallax Mechanical Shapes */}
+      {/* Floating 3D Parallax Tech Shapes */}
       <Floating3DArtifacts />
+
+      {/* Global X-Ray Architecture Mode Inspector (Shift + X) */}
+      <XRayInspector />
 
       {/* Main Page Layout Container */}
       <div className="relative min-h-screen bg-[var(--background)] text-[var(--foreground)] selection:bg-yellow-400 selection:text-zinc-950 transition-colors duration-300">

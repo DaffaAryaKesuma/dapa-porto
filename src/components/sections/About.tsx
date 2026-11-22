@@ -18,6 +18,8 @@ import { Card3D } from '@/components/ui/Card3D';
 import { Badge } from '@/components/ui/Badge';
 import { TextReveal } from '@/components/ui/TextReveal';
 import { GlitchText } from '@/components/ui/GlitchText';
+import { ArchitectureBenchmark } from '@/components/ui/ArchitectureBenchmark';
+import { XRayTag } from '@/components/ui/XRayInspector';
 import { PERSONAL_INFO } from '@/data/portfolioData';
 
 export function About() {
@@ -60,124 +62,132 @@ export function About() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <SectionHeading
           number="01"
-          title="Tentang Saya"
-          subtitle="Merancang dan membangun arsitektur web modern dengan standar performa tinggi, kebersihan kode, dan skalabilitas data."
+          title="Tentang Saya & Filosofi Rekayasa"
+          subtitle="Menggabungkan pemikiran arsitektur perangkat lunak yang kokoh dengan implementasi antarmuka yang presisi."
         />
 
         {/* 3D Bento Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 mt-12">
-          {/* Bento Card 1: Decoupled Architecture Core - 7 Cols */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-12">
+          {/* Card 1: Core Bio & Developer Persona (8 cols) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="md:col-span-7"
+            className="lg:col-span-8 relative"
           >
+            <XRayTag label="BENTO GRID COMPONENT" tech="React + Framer Motion" />
             <Card3D glowColor="yellow" className="p-6 sm:p-8 h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-6">
-                  <Badge variant="yellow" dot size="sm">
-                    CORE EXPERTISE
-                  </Badge>
-                  <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                    DECOUPLED // FULL-STACK
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
+                  <span className="font-mono text-xs text-yellow-600 dark:text-yellow-400 flex items-center gap-1.5 font-bold">
+                    <Terminal className="w-3.5 h-3.5" />
+                    DEVELOPER_MANIFESTO.md
                   </span>
+                  <Badge variant="yellow" size="sm" dot>
+                    FULL-STACK
+                  </Badge>
                 </div>
 
-                <div className="space-y-4">
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
-                    <TextReveal as="span">
-                      Fokus pada Arsitektur Web Skalabel &amp; Efisien
-                    </TextReveal>
-                  </h3>
+                <h3 className="text-2xl sm:text-3xl font-black text-zinc-950 dark:text-white tracking-tight leading-snug">
+                  <TextReveal as="span">
+                    Membangun jembatan antara logika backend yang andal dan interaksi web yang responsif.
+                  </TextReveal>
+                </h3>
 
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans">
-                    Saya adalah seorang <strong className="text-zinc-950 dark:text-white font-semibold">Full-Stack Web Developer</strong> dengan latar belakang pendidikan Informatika. Saya fokus dalam merancang antarmuka pengguna yang cepat dan responsif serta arsitektur backend RESTful API yang terstruktur dengan baik.
-                  </p>
-
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans">
-                    Spesialisasi utama saya terletak pada perancangan arsitektur <strong className="text-yellow-600 dark:text-yellow-400 font-semibold">decoupled</strong>—menghubungkan antarmuka frontend Single Page Application (SPA) berbasis <em>Vue.js / Next.js</em> dengan backend <em>Laravel REST API</em> yang aman dan berkinerja tinggi.
-                  </p>
+                <div className="space-y-3 text-sm text-zinc-600 dark:text-zinc-300 font-sans leading-relaxed">
+                  {PERSONAL_INFO.aboutMe.map((paragraph, idx) => (
+                    <p key={idx}>{paragraph}</p>
+                  ))}
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-white/10 flex flex-wrap items-center gap-2">
-                <span className="text-xs font-mono text-zinc-500 font-semibold">Keahlian Kunci:</span>
-                {['Vue.js 3', 'Laravel 11', 'REST API', 'MySQL', 'Next.js', 'Tailwind CSS'].map((tech) => (
-                  <span
-                    key={tech}
-                    className="font-mono text-[11px] px-2.5 py-1 rounded bg-zinc-100 dark:bg-zinc-900 text-zinc-800 dark:text-zinc-200 border border-zinc-200 dark:border-white/10"
-                  >
-                    {tech}
-                  </span>
-                ))}
+              <div className="pt-6 mt-6 border-t border-zinc-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+                <div className="flex items-center gap-2 text-zinc-500">
+                  <Globe className="w-4 h-4 text-emerald-500" />
+                  <span>BERBASIS DI: {PERSONAL_INFO.location}</span>
+                </div>
+                <div className="text-yellow-600 dark:text-yellow-400 font-bold">
+                  <GlitchText text="// READY FOR WEB ENGINEERING CHALLENGES" />
+                </div>
               </div>
             </Card3D>
           </motion.div>
 
-          {/* Bento Card 2: Clean Code & High Performance - 5 Cols */}
+          {/* Card 2: Technical Focus Capsule (4 cols) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="md:col-span-5"
+            className="lg:col-span-4 relative"
           >
+            <XRayTag label="TELEMETRY METRICS" tech="Tailwind v4 JIT" />
             <Card3D glowColor="cyan" className="p-6 sm:p-8 h-full flex flex-col justify-between">
-              <div>
-                <div className="flex items-center justify-between gap-2 mb-6">
-                  <Badge variant="cyan" dot size="sm">
-                    ENGINEERING VALUES
-                  </Badge>
-                  <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">
-                    CLEAN CODE
+              <div className="space-y-4">
+                <div className="flex items-center justify-between border-b border-zinc-200 dark:border-white/10 pb-4">
+                  <span className="font-mono text-xs text-cyan-500 flex items-center gap-1.5 font-bold">
+                    <Cpu className="w-3.5 h-3.5" />
+                    SPESIALISASI TEKNIS
                   </span>
+                  <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
                 </div>
 
                 <div className="space-y-4">
-                  <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-950 dark:text-white tracking-tight">
-                    <TextReveal as="span">
-                      Standar Kualitas &amp; Integritas Data
-                    </TextReveal>
-                  </h3>
+                  <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 space-y-1">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block font-bold">
+                      ARSITEKTUR UTAMA
+                    </span>
+                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white">
+                      Decoupled Web Architecture
+                    </h4>
+                    <p className="text-xs text-zinc-500">
+                      Vue.js SPA di frontend &amp; Laravel REST API di backend.
+                    </p>
+                  </div>
 
-                  <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans">
-                    Bagi saya, setiap baris kode harus ditulis dengan standar keterbacaan tinggi, modular, dan terstruktur agar memudahkan kolaborasi tim serta pemeliharaan jangka panjang.
-                  </p>
+                  <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 space-y-1">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block font-bold">
+                      STANDAR INTEGRITAS
+                    </span>
+                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white">
+                      Type-Safety &amp; Clean Code
+                    </h4>
+                    <p className="text-xs text-zinc-500">
+                      TypeScript, ACID database transactions, dan RESTful standards.
+                    </p>
+                  </div>
 
-                  <div className="space-y-2.5 pt-2 font-mono text-xs">
-                    <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Type-Safe &amp; Strict Linting Rules</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>ACID-Compliant Transactions</span>
-                    </div>
-                    <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                      <span>Sub-50ms API Latency Target</span>
-                    </div>
+                  <div className="p-3.5 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200 dark:border-white/5 space-y-1">
+                    <span className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest block font-bold">
+                      FOKUS SKALABILITAS
+                    </span>
+                    <h4 className="font-bold text-sm text-zinc-900 dark:text-white">
+                      High-Throughput APIs
+                    </h4>
+                    <p className="text-xs text-zinc-500">
+                      Sanctum token auth, indexed MySQL queries, dan Pinia state sync.
+                    </p>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-8 pt-4 border-t border-zinc-200 dark:border-white/10 font-mono text-xs text-zinc-500 flex items-center justify-between">
-                <span>PARADIGMA</span>
-                <span className="font-bold text-cyan-500">MODULAR &amp; SCALABLE</span>
+              <div className="pt-4 border-t border-zinc-200 dark:border-white/10 font-mono text-[11px] text-zinc-500 flex items-center justify-between">
+                <span>SYSTEM STATUS</span>
+                <span className="text-emerald-500 font-bold">100% OPERATIONAL</span>
               </div>
             </Card3D>
           </motion.div>
 
-          {/* Bento Card 3: 4 Engineering Pillars - Full 12 Cols */}
+          {/* Card 3: 4 Engineering Pillars (12 cols) */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
-            className="md:col-span-12"
+            className="lg:col-span-12 relative"
           >
+            <XRayTag label="PILLARS OF CODE" tech="CSS Grid 3D Tilt" />
             <Card3D glowColor="mint" className="p-6 sm:p-8">
               <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
                 <div>
@@ -215,6 +225,18 @@ export function About() {
                 })}
               </div>
             </Card3D>
+          </motion.div>
+
+          {/* Card 4: LIVE ARCHITECTURE BENCHMARK DUEL (12 cols) */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+            className="lg:col-span-12 relative"
+          >
+            <XRayTag label="LIVE BENCHMARK DUEL" tech="Web Audio + Reactive Benchmark" />
+            <ArchitectureBenchmark />
           </motion.div>
         </div>
       </div>

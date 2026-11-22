@@ -1,3 +1,12 @@
+export interface CaseStudy {
+  challenge: string;
+  solution: string;
+  impact: string;
+  architectureDiagram: string[];
+  databaseSchema: { table: string; columns: string }[];
+  keyEndpoints: { method: string; path: string; desc: string }[];
+}
+
 export interface Project {
   id: string;
   title: string;
@@ -7,6 +16,7 @@ export interface Project {
   tags: string[];
   features: string[];
   metrics?: { label: string; value: string }[];
+  caseStudy?: CaseStudy;
   demoUrl?: string;
   githubUrl?: string;
   githubFrontendUrl?: string;
@@ -41,6 +51,7 @@ export const PERSONAL_INFO = {
   shortBio: "Lulusan Informatika yang berfokus pada perancangan arsitektur web modern. Berpengalaman dalam membangun aplikasi web decoupled dengan Vue.js/Next.js di frontend dan Laravel REST API di backend.",
   email: "dafaaryakesuma20@gmail.com",
   phone: "+62 812-XXXX-XXXX",
+  whatsapp: "https://wa.me/6281200000000?text=Halo%20Daffa%2C%20saya%20tertarik%20berdiskusi%20tentang%20peluang%20proyek%20web%20development.",
   location: "Indonesia",
   cvUrl: "/cv-daffa.pdf",
   github: "https://github.com/DaffaAryaKesuma",
@@ -221,6 +232,35 @@ export const PROJECTS: Project[] = [
       { label: "FRONTEND SPA", value: "Vue.js 3 + Pinia" },
       { label: "AUTENTIKASI", value: "Laravel Sanctum Bearer" },
     ],
+    caseStudy: {
+      challenge:
+        "Sistem operasional bengkel konvensional mengalami bottleneck parah akibat pencatatan manual, selisih stok suku cadang, serta keterlambatan laporan omzet bulanan antar cabang.",
+      solution:
+        "Membangun arsitektur decoupled berbasis Vue.js 3 SPA yang berkomunikasi via RESTful API Laravel 11. Mengimplementasikan token auth (Sanctum), state synchronization Pinia, dan transaksi ACID database MySQL untuk menjamin integritas stok.",
+      impact:
+        "Pencatatan servis terotomasi 100%, response time API <35ms, nihil selisih stok inventori, dan omzet keuangan dapat dianalisis secara real-time.",
+      architectureDiagram: [
+        "Vue.js 3 Frontend SPA (Pinia Store)",
+        "Axios HTTP Interceptors (Bearer Token Injection)",
+        "Laravel 11 Sanctum Middleware & Rate Limiter",
+        "Controller Logic & Form Request Validation",
+        "Eloquent ORM with ACID Transactions",
+        "Indexed MySQL Relational Storage",
+      ],
+      databaseSchema: [
+        { table: "users", columns: "id, name, email, role (enum), password, sanctum_token" },
+        { table: "service_orders", columns: "id, vehicle_plate, customer_name, status, total_cost" },
+        { table: "spareparts", columns: "id, part_number, part_name, stock_qty, buy_price, sell_price" },
+        { table: "order_items", columns: "id, service_order_id, sparepart_id, qty, subtotal" },
+        { table: "financial_logs", columns: "id, order_id, type, amount, recorded_at" },
+      ],
+      keyEndpoints: [
+        { method: "POST", path: "/api/v1/auth/login", desc: "Autentikasi kredensial & penerbitan Bearer Token Sanctum" },
+        { method: "GET", path: "/api/v1/services/queue", desc: "Mendapatkan antrean servis aktif real-time" },
+        { method: "POST", path: "/api/v1/services/checkout", desc: "Memproses invoice, pemotongan stok ACID, dan audit log" },
+        { method: "GET", path: "/api/v1/analytics/monthly", desc: "Agregasi omzet & efisiensi servis terindeks" },
+      ],
+    },
     githubFrontendUrl: "https://github.com/DaffaAryaKesuma/krgarage-frontend.git",
     githubBackendUrl: "https://github.com/DaffaAryaKesuma/krgarage-backend.git",
     demoUrl: "https://krgarage-demo.vercel.app",
@@ -239,6 +279,29 @@ export const PROJECTS: Project[] = [
       "Interactive REST API endpoint tester with live JSON payload highlighter",
       "Comprehensive telemetry charts for project velocity and code metrics",
     ],
+    caseStudy: {
+      challenge:
+        "Tim developer membutuhkan tool kolaborasi ringan yang menggabungkan manajemen sprint Agile dengan REST API tester langsung dalam satu antarmuka.",
+      solution:
+        "Merancang antarmuka Next.js App Router dengan state management Zustand, drag-and-drop modular, dan live JSON parsing syntax highlighter.",
+      impact:
+        "Mengurangi waktu context-switching developer hingga 40% dan mempercepat proses testing API endpoint tim.",
+      architectureDiagram: [
+        "Next.js 16 App Router (Client Components)",
+        "Zustand Global Reactive State Store",
+        "Framer Motion Spring Physics Engine",
+        "Mock REST API Fetch & JSON Formatter",
+      ],
+      databaseSchema: [
+        { table: "projects", columns: "id, name, repo_url, sprint_cycle" },
+        { table: "tasks", columns: "id, project_id, title, status, priority, assignee" },
+        { table: "api_endpoints", columns: "id, method, url, mock_response, latency_ms" },
+      ],
+      keyEndpoints: [
+        { method: "GET", path: "/api/sprint/board", desc: "Fetch active task board state" },
+        { method: "POST", path: "/api/tester/dispatch", desc: "Execute mock REST call and return response headers" },
+      ],
+    },
     demoUrl: "https://devflow-collab.vercel.app",
     githubUrl: "https://github.com/DaffaAryaKesuma/devflow-platform",
     image: "/images/projects/devflow.png",
@@ -256,6 +319,30 @@ export const PROJECTS: Project[] = [
       "Role-based permission middleware (RBAC) protecting critical endpoints",
       "Comprehensive Postman collection with automated regression test suites",
     ],
+    caseStudy: {
+      challenge:
+        "Sistem multi-klien membutuhkan backend API gateway yang aman, mampu menahan rate-limit serangan DDoS, serta otentikasi role-based yang ketat.",
+      solution:
+        "Mengembangkan service backend Laravel dengan middleware rate limiting, caching Redis, indexing foreign key MySQL, dan audit trail per route request.",
+      impact:
+        "Throughput mencapai 1,400+ request per detik dengan latensi rata-rata di bawah 15ms dan zero unauthorized data breaches.",
+      architectureDiagram: [
+        "Incoming HTTPS Client Request",
+        "Rate Limiter & IP Throttling Middleware",
+        "Sanctum Bearer Token Validation Layer",
+        "Role-Based Access Control (RBAC) Gate",
+        "Eloquent Query Execution with Redis Cache",
+      ],
+      databaseSchema: [
+        { table: "api_clients", columns: "id, client_name, api_key, rate_limit_tier" },
+        { table: "roles", columns: "id, role_name, permissions_json" },
+        { table: "audit_logs", columns: "id, ip_address, endpoint, method, response_code" },
+      ],
+      keyEndpoints: [
+        { method: "POST", path: "/api/v1/auth/verify", desc: "Token inspection & signature verification" },
+        { method: "GET", path: "/api/v1/telemetry/health", desc: "Live service latency & memory usage" },
+      ],
+    },
     demoUrl: "https://api-gateway-demo.example.com",
     githubUrl: "https://github.com/DaffaAryaKesuma/secure-api-engine",
     image: "/images/projects/api-engine.png",
@@ -273,6 +360,29 @@ export const PROJECTS: Project[] = [
       "Decoupled state synchronization with Pinia and Axios interceptors",
       "Export reports to PDF & Excel with automated data aggregation",
     ],
+    caseStudy: {
+      challenge:
+        "Kebutuhan visualisasi data multi-tenant dengan ribuan baris data transaksi tanpa membuat browser lag atau memory leak.",
+      solution:
+        "Implementasi arsitektur decoupled Vue.js 3 SPA dengan virtual scrolling table, Chart.js canvas rendering, dan pagination query terindeks di Laravel.",
+      impact:
+        "Rendering ribuan data transaksi berjalan mulus pada 60fps dengan kemampuan ekspor laporan instan.",
+      architectureDiagram: [
+        "Vue.js 3 SPA Virtual Table Renderer",
+        "Pinia Real-Time Filter & Aggregation Store",
+        "Laravel API Pagination & Query Builder",
+        "MySQL Indexed Partition Tables",
+      ],
+      databaseSchema: [
+        { table: "tenants", columns: "id, company_name, tier, subscription_status" },
+        { table: "analytics_events", columns: "id, tenant_id, event_name, payload, created_at" },
+        { table: "reports", columns: "id, tenant_id, file_path, generated_at" },
+      ],
+      keyEndpoints: [
+        { method: "GET", path: "/api/v1/analytics/stream", desc: "Real-time event data stream for dashboard" },
+        { method: "POST", path: "/api/v1/reports/export", desc: "Generate aggregated PDF/Excel dataset" },
+      ],
+    },
     demoUrl: "https://cloudpulse-analytics.example.com",
     githubUrl: "https://github.com/DaffaAryaKesuma/cloudpulse-saas",
     image: "/images/projects/cloudpulse.png",

@@ -23,6 +23,7 @@ import { SectionHeading } from '@/components/ui/SectionHeading';
 import { Card3D } from '@/components/ui/Card3D';
 import { Badge } from '@/components/ui/Badge';
 import { SKILL_CATEGORIES } from '@/data/portfolioData';
+import { sound } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 
 export function Skills() {
@@ -88,7 +89,10 @@ export function Skills() {
                   type="button"
                   suppressHydrationWarning
                   key={cat.categoryKey}
-                  onClick={() => setActiveTab(cat.categoryKey)}
+                  onClick={() => {
+                    sound.playClick();
+                    setActiveTab(cat.categoryKey);
+                  }}
                   className={cn(
                     'relative px-4 sm:px-6 py-2 rounded-full font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer select-none',
                     isActive

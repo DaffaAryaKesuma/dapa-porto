@@ -10,6 +10,7 @@ import {
   Zap,
   Layers,
   Sparkles,
+  BookOpen,
 } from 'lucide-react';
 import { GithubIcon } from '@/components/ui/Icons';
 import { SectionHeading } from '@/components/ui/SectionHeading';
@@ -18,11 +19,15 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { TextReveal } from '@/components/ui/TextReveal';
 import { GlitchText } from '@/components/ui/GlitchText';
-import { PROJECTS } from '@/data/portfolioData';
+import { ProjectMockup } from '@/components/ui/ProjectMockup';
+import { ProjectModal } from '@/components/ui/ProjectModal';
+import { PROJECTS, Project } from '@/data/portfolioData';
+import { sound } from '@/lib/sound';
 import { cn } from '@/lib/utils';
 
 export function Projects() {
   const [selectedFilter, setSelectedFilter] = useState<'All' | 'Full-Stack' | 'Frontend' | 'Backend'>('All');
+  const [activeModalProject, setActiveModalProject] = useState<Project | null>(null);
 
   const filterOptions: ('All' | 'Full-Stack' | 'Frontend' | 'Backend')[] = [
     'All',
@@ -41,8 +46,21 @@ export function Projects() {
     (p) => !p.featured || selectedFilter !== 'All'
   );
 
+  const handleOpenModal = (project: Project) => {
+    sound.playSuccess();
+    setActiveModalProject(project);
+  };
+
   return (
     <section id="projects" className="py-24 relative overflow-hidden">
+      {/* Interactive Case Study Modal */}
+      {activeModalProject && (
+        <ProjectModal
+          project={activeModalProject}
+          onClose={() => setActiveModalProject(null)}
+        />
+      )}
+
       {/* Ambient background mesh */}
       <div className="absolute top-1/3 right-5 w-96 h-96 bg-yellow-500/10 rounded-full blur-[130px] pointer-events-none" />
 
@@ -63,7 +81,10 @@ export function Projects() {
                   type="button"
                   suppressHydrationWarning
                   key={filter}
-                  onClick={() => setSelectedFilter(filter)}
+                  onClick={() => {
+                    sound.playClick();
+                    setSelectedFilter(filter);
+                  }}
                   className={cn(
                     'relative px-4 py-2 rounded-full font-bold uppercase tracking-wider transition-colors duration-200 cursor-pointer select-none',
                     isActive
@@ -96,24 +117,33 @@ export function Projects() {
             transition={{ duration: 0.6 }}
             className="mb-16"
           >
-            <div className="mb-3 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping" />
-              <span className="font-mono text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-widest">
-                // FEATURED SYSTEM ARCHITECTURE
-              </span>
+            <div className="mb-3 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-yellow-400 animate-ping" />
+                <span className="font-mono text-xs font-bold text-yellow-600 dark:text-yellow-400 uppercase tracking-widest">
+                  // FEATURED SYSTEM ARCHITECTURE
+                </span>
+              </div>
+
+              <button
+                type="button"
+                suppressHydrationWarning
+                onClick={() => handleOpenModal(featuredProject)}
+                className="hidden sm:flex items-center gap-1.5 font-mono text-xs font-bold text-yellow-600 dark:text-yellow-400 hover:underline cursor-pointer"
+              >
+                <BookOpen className="w-3.5 h-3.5" />
+                <span>Buka Case Study Lengkap &rarr;</span>
+              </button>
             </div>
 
             {/* 3D Card with Conic Spinning Border Wrapper */}
-            <div
-              data-cursor="explore"
-              className="p-[2px] rounded-2xl conic-gradient-border shadow-2xl cursor-pointer"
-            >
+            <div className="p-[2px] rounded-2xl conic-gradient-border shadow-2xl">
               <Card3D
                 glowColor="yellow"
                 className="p-6 sm:p-10 bg-white/95 dark:bg-[#0c0c12]/95 backdrop-blur-2xl rounded-2xl"
               >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                  <div className="lg:col-span-7 space-y-6">
+                  <div className="lg:col-span-6 space-y-6">
                     <div className="flex flex-wrap items-center gap-2">
                       <Badge variant="yellow" size="md" dot>
                         FEATURED HIGHLIGHT
@@ -127,7 +157,7 @@ export function Projects() {
                     </div>
 
                     <div>
-                      <h3 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-zinc-950 dark:text-white tracking-tight leading-tight">
+                      <h3 className="text-2xl sm:text-3xl font-extrabold text-zinc-950 dark:text-white tracking-tight leading-tight">
                         <TextReveal as="span">
                           {featuredProject.title}
                         </TextReveal>
@@ -137,7 +167,7 @@ export function Projects() {
                       </p>
                     </div>
 
-                    <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans">
+                    <p className="text-sm text-zinc-600 dark:text-zinc-300 leading-relaxed font-sans">
                       {featuredProject.longDescription || featuredProject.description}
                     </p>
 
@@ -149,7 +179,7 @@ export function Projects() {
                         {featuredProject.features.map((feature, idx) => (
                           <li
                             key={idx}
-                            className="flex items-start gap-2.5 text-xs sm:text-sm text-zinc-600 dark:text-zinc-300 font-sans"
+                            className="flex items-start gap-2.5 text-xs text-zinc-600 dark:text-zinc-300 font-sans"
                           >
                             <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
                             <span>{feature}</span>
@@ -166,8 +196,20 @@ export function Projects() {
                       ))}
                     </div>
 
-                    {/* Dual Action Repository Buttons */}
+                    {/* Dual Action Repository Buttons + Case Study Action */}
                     <div className="flex flex-wrap items-center gap-3 pt-6 border-t border-zinc-200 dark:border-white/10">
+                      <Button
+                        type="button"
+                        suppressHydrationWarning
+                        onClick={() => handleOpenModal(featuredProject)}
+                        variant="primary"
+                        size="md"
+                        icon={<BookOpen className="w-4 h-4" />}
+                        className="font-mono text-xs font-bold shadow-lg shadow-yellow-500/25"
+                      >
+                        Detail Case Study
+                      </Button>
+
                       {featuredProject.githubFrontendUrl && (
                         <Button
                           href={featuredProject.githubFrontendUrl}
@@ -176,7 +218,7 @@ export function Projects() {
                           icon={<GithubIcon className="w-4 h-4" />}
                           className="font-mono text-xs font-bold"
                         >
-                          Frontend Repo (Vue.js)
+                          Frontend Repo
                         </Button>
                       )}
 
@@ -188,61 +230,48 @@ export function Projects() {
                           icon={<GithubIcon className="w-4 h-4" />}
                           className="font-mono text-xs font-bold"
                         >
-                          Backend Repo (Laravel)
-                        </Button>
-                      )}
-
-                      {featuredProject.demoUrl && (
-                        <Button
-                          href={featuredProject.demoUrl}
-                          variant="primary"
-                          size="md"
-                          icon={<ExternalLink className="w-4 h-4" />}
-                          className="font-mono text-xs font-bold shadow-lg shadow-yellow-500/20"
-                        >
-                          Live Demo
+                          Backend Repo
                         </Button>
                       )}
                     </div>
                   </div>
 
-                  {/* Right Telemetry Column */}
-                  <div className="lg:col-span-5 flex flex-col justify-between gap-5 h-full">
-                    <div className="p-5 rounded-xl bg-zinc-100/90 dark:bg-zinc-900/90 border border-zinc-200 dark:border-white/10 font-mono space-y-4 shadow-md">
-                      <div className="flex items-center justify-between text-xs text-zinc-500 pb-3 border-b border-zinc-200 dark:border-white/10">
-                        <span className="flex items-center gap-2 text-zinc-900 dark:text-zinc-200 font-bold">
-                          <Cpu className="w-4 h-4 text-yellow-500" />
-                          TELEMETRI SISTEM
+                  {/* Right Column: Live Interactive UI Dashboard Mockup */}
+                  <div className="lg:col-span-6 flex flex-col justify-center h-full">
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between font-mono text-xs text-zinc-500 pb-1">
+                        <span className="flex items-center gap-1.5 font-bold text-zinc-900 dark:text-zinc-200">
+                          <Cpu className="w-3.5 h-3.5 text-yellow-500" />
+                          LIVE UI DASHBOARD PREVIEW
                         </span>
-                        <span className="text-emerald-400 font-bold flex items-center gap-1">
-                          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                          OPTIMAL
-                        </span>
+                        <button
+                          type="button"
+                          suppressHydrationWarning
+                          onClick={() => handleOpenModal(featuredProject)}
+                          className="text-yellow-600 dark:text-yellow-400 font-bold text-[10px] hover:underline cursor-pointer"
+                        >
+                          KLIK UNTUK MEMPERBESAR ↗
+                        </button>
                       </div>
 
-                      <div className="space-y-3">
-                        {featuredProject.metrics?.map((metric, i) => (
-                          <div
-                            key={i}
-                            className="flex items-center justify-between text-xs border-b border-zinc-200/60 dark:border-zinc-800/60 pb-2.5 last:border-b-0"
-                          >
-                            <span className="text-zinc-500">{metric.label}</span>
-                            <span className="font-bold text-zinc-900 dark:text-zinc-200">
-                              {metric.value}
-                            </span>
-                          </div>
-                        ))}
+                      {/* Code-Rendered UI Mockup with Click-to-Open Modal */}
+                      <div
+                        onClick={() => handleOpenModal(featuredProject)}
+                        className="cursor-pointer group"
+                      >
+                        <ProjectMockup projectId="krgarage-system" className="group-hover:border-yellow-500/60 transition-colors" />
                       </div>
-                    </div>
 
-                    <div className="p-4 rounded-xl bg-zinc-950 text-zinc-300 border border-zinc-800 font-mono text-xs space-y-2">
-                      <div className="text-yellow-400 font-bold flex items-center gap-1.5">
-                        <Zap className="w-3.5 h-3.5" />
-                        <span>Decoupled Pattern (Vue.js &rarr; Laravel API)</span>
+                      {/* Technical Architecture Badge */}
+                      <div className="p-3 rounded-xl bg-zinc-950 text-zinc-300 border border-zinc-800 font-mono text-[11px] space-y-1">
+                        <div className="text-yellow-400 font-bold flex items-center gap-1.5">
+                          <Zap className="w-3.5 h-3.5" />
+                          <span>Decoupled Communication Architecture</span>
+                        </div>
+                        <p className="text-[10px] text-zinc-400 font-sans leading-relaxed">
+                          Frontend Vue.js SPA berkomunikasi secara asynchronous via Axios interceptors dengan token-based authentication (Sanctum).
+                        </p>
                       </div>
-                      <p className="text-[11px] text-zinc-400 font-sans leading-relaxed">
-                        Frontend SPA berkomunikasi secara asynchronous via Axios interceptors dengan token-based authentication (Sanctum).
-                      </p>
                     </div>
                   </div>
                 </div>
@@ -269,7 +298,6 @@ export function Projects() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   transition={{ duration: 0.3 }}
-                  data-cursor="explore"
                 >
                   <Card3D
                     glowColor={
@@ -279,10 +307,11 @@ export function Projects() {
                         ? 'yellow'
                         : 'mint'
                     }
-                    className="p-6 flex flex-col justify-between h-full group"
+                    className="p-5 flex flex-col justify-between h-full group space-y-4"
                   >
                     <div>
-                      <div className="flex items-start justify-between gap-2 mb-4">
+                      {/* Top Header Bar */}
+                      <div className="flex items-start justify-between gap-2 mb-3">
                         <Badge
                           variant={
                             project.category === 'Frontend'
@@ -296,7 +325,16 @@ export function Projects() {
                           {project.category}
                         </Badge>
 
-                        <div className="flex items-center gap-2.5">
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            suppressHydrationWarning
+                            onClick={() => handleOpenModal(project)}
+                            title="Buka Case Study"
+                            className="p-1 rounded text-zinc-400 hover:text-yellow-500 transition-colors cursor-pointer"
+                          >
+                            <BookOpen className="w-4 h-4" />
+                          </button>
                           {project.githubUrl && (
                             <a
                               href={project.githubUrl}
@@ -322,15 +360,26 @@ export function Projects() {
                         </div>
                       </div>
 
-                      <h4 className="font-bold text-base text-zinc-900 dark:text-white group-hover:text-yellow-500 transition-colors">
+                      {/* Embedded Live UI Mockup Preview */}
+                      <div
+                        onClick={() => handleOpenModal(project)}
+                        className="mb-4 transform group-hover:scale-[1.02] transition-transform duration-300 cursor-pointer"
+                      >
+                        <ProjectMockup projectId={project.id} />
+                      </div>
+
+                      <h4
+                        onClick={() => handleOpenModal(project)}
+                        className="font-bold text-base text-zinc-900 dark:text-white group-hover:text-yellow-500 transition-colors cursor-pointer"
+                      >
                         {project.title}
                       </h4>
 
-                      <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-2.5 line-clamp-3 leading-relaxed font-sans">
+                      <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-2 line-clamp-2 leading-relaxed font-sans">
                         {project.description}
                       </p>
 
-                      <ul className="mt-4 space-y-1.5">
+                      <ul className="mt-3 space-y-1.5">
                         {project.features.slice(0, 2).map((feat, idx) => (
                           <li
                             key={idx}
@@ -343,9 +392,9 @@ export function Projects() {
                       </ul>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-white/5">
+                    <div className="pt-3 border-t border-zinc-200 dark:border-white/5 flex items-center justify-between gap-2">
                       <div className="flex flex-wrap gap-1.5">
-                        {project.tags.map((tag) => (
+                        {project.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
                             className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-zinc-100 dark:bg-zinc-900 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-white/5"
@@ -354,6 +403,15 @@ export function Projects() {
                           </span>
                         ))}
                       </div>
+
+                      <button
+                        type="button"
+                        suppressHydrationWarning
+                        onClick={() => handleOpenModal(project)}
+                        className="text-[10px] font-mono font-bold text-yellow-600 dark:text-yellow-400 hover:underline shrink-0 cursor-pointer"
+                      >
+                        Detail &rarr;
+                      </button>
                     </div>
                   </Card3D>
                 </motion.div>

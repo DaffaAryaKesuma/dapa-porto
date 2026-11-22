@@ -3,6 +3,7 @@
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
+import { sound } from '@/lib/sound';
 
 export function ThemeToggle() {
   const { theme, resolvedTheme, setTheme } = useTheme();
@@ -24,6 +25,7 @@ export function ThemeToggle() {
   const isDark = currentTheme === 'dark';
 
   const toggleTheme = () => {
+    sound.playSwitch();
     setTheme(isDark ? 'light' : 'dark');
   };
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, CheckCircle2, ArrowRight, Zap, RefreshCw, Cpu, Layers } from 'lucide-react';
 import { Badge } from '@/components/ui/Badge';
+import { sound } from '@/lib/sound';
 
 export function ArchitectureSimulator() {
   const [isSimulating, setIsSimulating] = useState(false);
@@ -34,6 +35,7 @@ export function ArchitectureSimulator() {
 
   const handleSimulate = () => {
     if (isSimulating) return;
+    sound.playClick(1100);
     setIsSimulating(true);
     setHasSimulated(false);
     const randomLatency = Math.floor(Math.random() * 16) + 20;
@@ -42,6 +44,7 @@ export function ArchitectureSimulator() {
     setTimeout(() => {
       setIsSimulating(false);
       setHasSimulated(true);
+      sound.playSuccess();
     }, 850);
   };
 
@@ -67,7 +70,10 @@ export function ArchitectureSimulator() {
               type="button"
               suppressHydrationWarning
               key={ep}
-              onClick={() => setSelectedEndpoint(ep)}
+              onClick={() => {
+                sound.playClick();
+                setSelectedEndpoint(ep);
+              }}
               className={`px-2.5 py-1 rounded text-[10px] uppercase font-bold tracking-wider transition-all cursor-pointer ${
                 selectedEndpoint === ep
                   ? 'bg-yellow-500 text-zinc-950 shadow-sm shadow-yellow-500/20'
